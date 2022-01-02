@@ -1,0 +1,5 @@
+AddHandler x-httpd-php7-2 .php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

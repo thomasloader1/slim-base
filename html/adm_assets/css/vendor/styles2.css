@@ -1,0 +1,20 @@
+.rounded .card-img-left {
+    border-top-left-radius: 0.75rem !important;
+    border-bottom-left-radius: 0.75rem !important;
+    border-top-right-radius: 0.75rem !important;
+    border-bottom-right-radius: 0.75rem !important;
+}
+
+.rounded .card {
+    padding: 10px !important;
+}
+
+.list-thumbnail {
+    max-width: 15% !important;
+}
+
+@media (max-width: 991px) {
+    .list-thumbnail.responsive {
+        max-width: 30% !important;
+    }
+}
