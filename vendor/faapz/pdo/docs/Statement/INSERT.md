@@ -1,57 +1,92 @@
-# INSERT statement
+# [FaaPz\PDO\Statement\Insert](../../src/Statement/Insert.php) extends [AbstractStatement](../AbstractStatement.md)
 
-### Constructor
+## Constructor
 
-##### `__construct($dbh, $columns = ["*"])`
+### `__construct(Database $dbh, array $columns = [])`
 
-Parameter  | Type     | Default  | Description
----------- | -------- | -------- | -----------
-`$dbh`     | *PDO*    | required | PDO object for database connection
-`$pairs`   | *array*  | []       | Array of key => value pairs to update
+Parameter    | Description
+------------ | -----------------------------------------
+`$dbh`       | PDO object for database connection
+`$pairs`     | Array of key => value pairs to update
 
-### Methods
-
-##### `into($table)`
-
-Parameter | Type     | Default  | Description
---------- | -------- | -------- | -----------
-`$table`  | *string* | required | Table name
-
-##### `columns(array $columns)`
-
-Parameter  | Type    | Default  | Description
----------- | ------- | -------- | -----------
-`$columns` | *array* | required | Array containing column names
-
-##### `values(array $values)`
-
-Parameter | Type    | Default  | Description
---------- | ------- | -------- | -----------
-`$values` | *array* | required | Array containing column values
-
-##### `getValues()`
-Returns the values to be escaped for this statement.
-
-##### `execute()`
-Returns the primary key for the inserted record
-
-
-### Examples
+#### Example
 
 ```php
-// INSERT INTO users ( id , usr , pwd ) VALUES ( ? , ? , ? )
-$insertStatement = $pdo->insert(array(
-                               "id" => 1234,
-                               "usr" => "your_username",
-                               "pwd" => "your_password"
-                           ))
-                           ->into("users");
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Insert;
 
-// INSERT INTO users ( id , usr , pwd ) VALUES ( ? , ? , ? )
-$insertStatement = $pdo->insert()
-                           ->into("users")
-                           ->columns(array("id", "usr", "pwd"))
-                           ->values(array(1234, "your_username", "your_password"));
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
 
-$insertId = $insertStatement->execute(false);
+// INSERT INTO users (id , username , password) VALUES (? , ? , ?)
+$insert = new Insert($database, [
+              'id' => 1234,
+              'username' => 'user',
+              'password' => 'passwd'
+          ])
+          ->into('users');
+
+$insertId = $insert->execute()->lastInsertId();
+```
+
+## Methods
+
+### `into($table)`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$table`     | Table name
+
+#### Example
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Insert;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// INSERT INTO users ...
+$database->insert()
+         ->into('users');
+```
+
+### `columns(array $columns)`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$columns`   | Array containing column names
+
+#### Example
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Insert;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+    
+// INSERT INTO users (id, username, password) ...
+$database->insert()
+         ->into('users')
+         ->columns(['id', 'username', 'password']);
+```
+
+### `values(array $values)`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$values`    | Array containing column values
+
+#### Example
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Insert;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+    
+// INSERT INTO users (id, username, password) VALUES (? , ? , ?), (? , ? , ?)
+$database->insert()
+         ->into('users')
+         ->columns(['id', 'username', 'password'])
+         ->values([1, 'user1', 'passwd1'])
+         ->values([2, 'user2', 'passwd2']);
 ```

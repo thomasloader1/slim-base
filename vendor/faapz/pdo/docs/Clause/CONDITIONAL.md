@@ -1,75 +1,64 @@
-# Conditional clause
+# [FaaPz\PDO\Clause\Conditional](../../src/Clause/Conditional.php) implements [QueryInterface](../QueryInterface.md)
 
-> Used in [SELECT](../Statement/SELECT.md), [UPDATE](../docs/Statement/UPDATE.md) and [DELETE](../Statement/DELETE.md) statements.
-> Used by [GROUPING](../Clause/GROUPING.md) and [JOIN](../docs/Statement/JOIN.md) clauses.
+> Used in [Select](../Statement/Select.md), [Update](../Statement/Update.md) and [Delete](../Statement/Delete.md) statements.
 
-### Constructor
+> Used by [Grouping](../Clause/Grouping.md) and [Join](../Clause/Join.md) clauses.
 
-##### `__construct($column, $operator, $value)`
-Parameter   | Type     | Default  | Description
------------ | -------- | -------- | -----------
-`$column`   | *string* | required | Database column to match against
-`$operator` | *string* | required | Operator to match against
-`$value`    | *mixed*  | required | One or more values to be safely matched against
+## Constructor
 
-### Methods
+### `__construct(string $column, string $operator, $value)`
 
-##### `__toString()`
-Returns the prepared SQL string for this clause.
+All Conditional values are parameterized by default.  Please use the [Raw](Raw.md) class to prevent this behavior if 
+not desired.
 
-##### `getValues()`
-Returns the values to be escaped for this clause.
+Parameter     | Description
+------------- | -----------------------------------------
+`$column`     | Database column to match against
+`$operator`   | Operator to match against
+`$value`      | One or more values to match against
 
-### Examples
+### Example
 
 ```php
-// ... WHERE usr = ? OR f_name = ?
+use FaaPz\PDO\Clause\Conditional;
+
+// ... WHERE id BETWEEN ? AND ?
 $statement->where(
-    new Clause\Grouping("OR", array(
-        new Clause\Conditional("usr", "=", "FaaPz"),
-        new Clause\Conditional("f_name", "=", 'Fabian')
-    ));
+    new Clause\Conditional("id", "BETWEEN", [
+        110, 220
+    ])
+);
 
-// ... WHERE customer_id BETWEEN ? AND ?
-$statement->where(new Clause\Conditional("customer_id", "BETWEEN",
-    new Clause\Grouping("AND", array(110, 220));
-
-// ... WHERE customer_id NOT BETWEEN ? AND ?
-$statement->where(new Clause\Conditional("customer_id", "NOT BETWEEN",
-    new Clause\Grouping("AND", array(110, 220));
-
-// ... WHERE customer_id IN ( ?, ?, ?, ? )
+// ... WHERE id NOT BETWEEN ? AND ?
 $statement->where(
-    new Clause\Conditional("customer_id", "IN", array(
+    new Clause\Conditional("id", "NOT BETWEEN", [
+        110, 220
+    ])
+);
+
+// ... WHERE id IN (?, ?, ?, ?)
+$statement->where(
+    new Clause\Conditional("id", "IN", [
         110, 120, 130, 140
-    ));
+    ])
+);
 
-// ... WHERE customer_id NOT IN ( ?, ?, ?, ? )
+// ... WHERE id NOT IN (?, ?, ?, ?)
 $statement->where(
-    new Clause\Conditional("customer_id", "NOT IN", array(
+    new Clause\Conditional("id", "NOT IN", [
         110, 120, 130, 140
-    ));
+    ])
+);
 
-// ... WHERE f_name LIKE ?
-$statement->where(new Clause\Conditional("f_name", "LIKE", "Fab%"));
+// ... WHERE first_name LIKE ?
+$statement->where(new Clause\Conditional("first_name", "LIKE", "Fab%"));
 
+// ... WHERE first_name NOT LIKE ?
+$statement->where(new Clause\Conditional("first_name", "NOT LIKE", "Fab%"));
 
-// ... WHERE l_name NOT LIKE ?
-$statement->where(new Clause\Conditional("f_name", "NOT LIKE", "Fab%"));
+// ... WHERE first_name IS NULL
+$statement->where(new Clause\Conditional("first_name", "IS", null));
 
-// ... WHERE f_name IS NULL
-$statement->where(new Clause\Conditional("f_name", "IS", null));
-
-// ... WHERE l_name IS NOT NULL
-$statement->where(new Clause\Conditional("f_name", "IS NOT", null));
-
-// ... WHERE col_1 = ? AND (col_2 = ? OR col_3 = ?)
-$statement->where(
-    new Clause\Grouping("AND", array(
-        new Clause\Conditional("col_1", "=", "val_1"),
-        new Clause\Grouping("OR", array(
-            new Clause\Conditional("col_2", "=", 'val_2'),
-            new Clause\Conditional("col_3", "=", 'val_2')
-        )
-    ));
+// ... WHERE first_name IS NOT NULL
+$statement->where(new Clause\Conditional("first_name", "IS NOT", null));
 ```

@@ -137,8 +137,8 @@ class ProductController extends BaseController
         }
 
         if ($user->role == 1 || $user->role == 2) {
-            $categories = Category::orderBy('name')->get();
-            return view($response, 'admin.products.add-product', compact('user', 'categories'));
+            //$categories = Category::orderBy('name')->get();
+            return view($response, 'admin.products.add-product', compact('user'));
         } else {
             return $response->withHeader('Location', siteUrl('/'))->withStatus(302);
         }

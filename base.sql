@@ -12,8 +12,7 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`id`)
 );
 
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+
 
 INSERT INTO `admin` (`id`, `name`, `email`, `password`, `role`, `created_at`, `updated_at`)
 VALUES
@@ -48,8 +47,7 @@ CREATE TABLE `banners` (
 );
 
 
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
-UNLOCK TABLES;
+
 
 
 

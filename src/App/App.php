@@ -6,13 +6,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Response;
 use App\Exceptions\CustomErrorRenderer;
-error_reporting(E_ERROR | E_PARSE);
+
+
 
 if (session_status() == PHP_SESSION_NONE) {session_start();}
 
-setlocale(LC_ALL, Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-setlocale(LC_MONETARY, 'es_AR.UTF-8');
-setlocale(LC_TIME,"es_ES.UTF-8");
+setlocale(LC_ALL, 'es_AR.UTF-8');
+
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/Functions.php';

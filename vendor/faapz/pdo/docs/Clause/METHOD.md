@@ -1,35 +1,24 @@
-# METHOD clause
+# [FaaPz\PDO\Clause\Method](../../src/Clause/Method.php) implements [QueryInterface](../QueryInterface.md)
 
-> Used in [SELECT](../Statement/SELECT.md), [UPDATE](../Statement/UPDATE.md), [INSERT](../Statement/INSERT.md)  and [DELETE](../Statement/DELETE.md) statements.
+> Used in [Call](../Statement/Call.md) statement.
 
-### Constructor
+## Constructor
 
-##### `__construct($name, $values)`
+### `__construct(string $name, ...$args)`
 
-Parameter  | Type     | Default  | Description
----------- | -------- | -------- | -----------
-`$name`    | *string* | required | Name of the method to call.
-`$values`  | *array*  | []       | Array of escaped arguments for this method.
+All Method args are parameterized by default.  Please use the [Raw](Raw.md) class to prevent this behavior if
+not desired.
 
-### Methods
+Parameter     | Description
+------------- | -----------------------------------------
+`$name`       | Name of the method to call
+`$values`     | Array of arguments for this method
 
-##### `__toString()`
-Returns the prepared SQL string for this statement.
-
-##### `getValues()`
-Returns the values to be escaped for this statement.
-
-### Examples
+### Example
 
 ```php
-$selectStatement = $pdo->select(array(
-                                new Clause\Method("MAX", "id")
-                            ))
-                           ->from("users");
+use FaaPz\PDO\Clause\Method;
 
-$selectStatement = $pdo->select(array(
-                                new Clause\Method("COUNT", "id")
-                            ))
-                           ->from("users")
-                           ->groupBy("account_id");
+// CALL MyProcedure(?, ?)
+$statement = $database->call(new Method("MyProcedure", "arg1", 2));
 ```

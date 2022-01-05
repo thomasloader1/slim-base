@@ -1,86 +1,158 @@
-# SELECT statement
+# [FaaPz\PDO\Statement\Select](../../src/Statement/Select.php) extends [AdvancedStatement](../AdvancedStatement.md)
 
-### Constructor
+## Constructor
 
-##### `__construct($dbh, $columns = ["*"])`
+#### `__construct(Database $dbh, array $columns = ['*'])`
 
-Parameter  | Type     | Default  | Description
----------- | -------- | -------- | -----------
-`$dbh`     | *PDO*    | required | PDO object for database connection
-`$columns` | *array*  | ["*"]    | Array of columns or Clause\Method
+Parameter    | Description
+------------ | -----------------------------------------
+`$dbh`       | PDO object for database connection
+`$columns`   | Optional columns to select
 
-### Methods
-
-##### `distinct()`
-
-##### `from($table)`
-
-Parameter | Type     | Default  | Description
---------- | -------- | -------- | -----------
-`$table`  | *string* | required | Table name
-
-##### `join($clause)`
-
-Parameter | Type                     | Default  | Description
---------- | ------------------------ | -------- | -----------
-`$clause` | *[Join](Clause/JOIN.md)* | required | One or more Join clauses to attach to this query
-
-##### `groupBy($column)`
-
-Parameter | Type     | Default  | Description
---------- | -------- | -------- | -----------
-`$column` | *string* | required | One or more columns to group the result by
-
-##### `having($clause)`
-
-Parameter | Type                                   | Default  | Description
---------- | -------------------------------------- | -------- | -----------
-`$clause` | *[Conditional](Clause/CONDITIONAL.md)* | required | One or more Conditial clauses to attach to this query
-
-##### `__toString()`
-Returns the prepared SQL string for this statement.
-
-##### `getValues()`
-Returns the values to be escaped for this statement.
-
-##### `where($clause)`
-
-Parameter | Type                                   | Default  | Description
---------- | -------------------------------------- | -------- | -----------
-`$clause` | *[Conditional](Clause/CONDITIONAL.md)* | required | One or more Conditional clauses to attach to this query
-
-##### `orderBy($column, $direction)`
-
-Parameter | Type     | Default  | Description
---------- | -------- | -------- | -----------
-`$column` | *string* | required | The column to order this query by.
-`$column` | *string* | null     | The order the above column should be sorted in.
-
-##### `limit($clause)`
-
-Parameter | Type                       | Default  | Description
---------- | -------------------------- | -------- | -----------
-`$clause` | *[Limit](Clause/LIMIT.md)* | required | A single limit conditional to be applied to this statement.
-
-##### `execute()`
-Returns PHP PDOStatement object.
-
-### Clauses
-
-+ [Conditional](Clause/CONDITIONAL.md)
-+ [Grouping](Clause/GROUPING.md)
-+ [Join](Clause/JOIN.md)
-+ [Limit](Clause/LIMIT.md)
-+ [Method](Clause/METHOD.md)
-
-### Examples
+#### Example
 
 ```php
-// SELECT * FROM users WHERE id = ?
-$selectStatement = $pdo->select(array("*"))
-                           ->from("users")
-                           ->where(new Conditional("id", "=", 1234));
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
 
-$stmt = $selectStatement->execute();
-$data = $stmt->fetch();
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT id, username, password ...
+$select = new Select($database, [
+              'id',
+              'username',
+              'password'
+          ]);
+
+$results = $select->execute();
+```
+
+## Methods
+
+### `distinct()`
+
+#### Example
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT DISTINCT id ...
+$database->select(['id'])
+         ->distinct();
+```
+
+### `columns(array $columns = ['*']): self`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$columns`   | Optional array of columns to select
+
+#### Example
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT COUNT(id) as cnt ...
+$database->select()
+         ->columns([
+            'cnt' => 'COUNT(id)'
+         ]);
+```
+
+### `from($table)`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$table`     | Table name
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT * FROM table ...
+$database->select()
+         ->from('table');
+```
+
+### `union(SelectInterface $query): self`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$query`     | Union query to append
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// (SELECT id FROM table1) UNION (SELECT id FROM table2) UNION (SELECT id FROM table3) 
+$database->select(['id'])
+        ->from('table1')
+       ->union($database->select(['id'])->from('table2'));
+       ->union($database->select(['id'])->from('table3'));
+```
+
+### `unionAll(SelectInterface $query): self`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$query`     | Union query to append
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// (SELECT id FROM table1) UNION ALL (SELECT id FROM table2) UNION ALL (SELECT id FROM table3) 
+$database->select(['id'])
+         ->from('table1')
+         ->unionAll($database->select(['id'])->from('table2'));
+         ->unionAll($database->select(['id'])->from('table3'));
+```
+
+### `groupBy(string ...$columns): self`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$columns`   | One or more columns to group by
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT * FROM table1 GROUP BY col1, col2 
+$database->select()
+         ->from('table')
+         ->groupBy('col1', 'col2');
+```
+
+### `having(ConditionalInterface $clause): self`
+
+Parameter    | Description
+------------ | -----------------------------------------
+`$clause`    | Having conditional clause
+
+```php
+use FaaPz\PDO\Database;
+use FaaPz\PDO\Clause\Conditional;
+use FaaPz\PDO\Statement\Select;
+
+$database = new Database('mysql:host=localhost;dbname=test_db;charset=UTF8');
+
+// SELECT * FROM table HAVING col1 > ? 
+$database->select()
+         ->from('table')
+         ->having(new Conditional('col1', '>', 0));
 ```

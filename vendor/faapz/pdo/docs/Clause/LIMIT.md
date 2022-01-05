@@ -1,27 +1,23 @@
-# LIMIT clause
+# [FaaPz\PDO\Clause\Limit](../../src/Clause/Limit.php) implements [QueryInterface](../QueryInterface.md)
 
-> Used in [SELECT](../Statement/SELECT.md), [UPDATE](../docs/Statement/UPDATE.md) and [DELETE](../Statement/DELETE.md) statements.
+> Used in [Select](../Statement/Select.md), [Update](../Statement/Update.md) and [Delete](../Statement/Delete.md) statements.
 
-##### `__construct($table, Conditional $on, $type = "")`
+## Constructor
 
-Parameter  | Type              | Default  | Description
----------- | ----------------- | -------- | -----------
-`$rowCount`| *int*             | required | The number of rows to effect.
-`$offset`  | *int|null*        | null     | The offset to start counting at.
+### `__construct(int $size, ?int $offset = null)`
 
-### Methods
+Parameter     | Description
+------------- | -----------------------------------------
+`$rowCount`   | The number of rows to effect
+`$offset`     | The offset to start counting at
 
-##### `__toString()`
-Returns the prepared SQL string for this statement.
-
-##### `getValues()`
-Returns the values to be escaped for this statement.
-
-### Examples
+#### Example
 ```php
-// ... LIMIT 10
-$statement->limit(new Clause\Limit(10));
+use FaaPz\PDO\Clause\Limit;
 
-// ... LIMIT 30, 10
-$statement->limit(new Clause\Limit(10, 30));
+// ... LIMIT ?
+$statement->limit(new Limit(10));
+
+// ... LIMIT ? OFFSET ?
+$statement->limit(new Limit(10, 30));
 ```

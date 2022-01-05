@@ -79,17 +79,6 @@ $app->group('/admin', function ($app) {
     
 })->add(AdminSessionMiddleware::class);
 
-$app->group('/tienda', function ($app) {
-    $app->get('', 'ShopController:getIndex');
-    $app->get('/', 'ShopController:getIndex');
-
-    //products
-    $app->get('/product/detail', 'ShopController:getDetail');
-    $app->post('/product/add', 'ShopController:addProduct');
-    $app->get('/product/{id}', 'ShopController:getProduct');
-});
 
 $app->get('', 'HomeController:getIndex');
 $app->get('/', 'HomeController:getIndex');
-
-$app->get('/cursos', 'HomeController:getCursos');

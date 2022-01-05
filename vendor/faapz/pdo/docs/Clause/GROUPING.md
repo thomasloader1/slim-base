@@ -1,32 +1,31 @@
-# GROUPING clause
+# [FaaPz\PDO\Clause\Grouping](../../src/Clause/Grouping.php) implements [QueryInterface](../QueryInterface.md)
 
-> Used in [SELECT](../Statement/SELECT.md), [UPDATE](../docs/Statement/UPDATE.md) and [DELETE](../Statement/DELETE.md) statements.
-> Used by [GROUPING](../Clause/GROUPING.md) and [JOIN](../docs/Statement/JOIN.md) clauses.
+> Used in [Select](../Statement/Select.md), [Udpdate](../Statement/Update.md) and [Delete](../Statement/Delete.md) statements.
 
-##### `__construct($rule, $clauses)`
+> Used by [Join](../Clause/Join.md) clauses.
 
-Parameter  | Type     | Default  | Description
----------- | -------- | -------- | -----------
-`$rule`    | *string* | required | Rule to use when combining conditionals
-`$clauses` | *array*  | required | Array of conditionals to combine.
+## Constructor
 
-### Methods
+### `__construct($rule, $clauses)`
 
-##### `__toString()`
-Returns the prepared SQL string for this statement.
+Parameter     | Description
+------------- | -----------------------------------------
+`$rule`       | Rule to use when combining conditionals
+`$clauses`    | Array of conditionals to combine
 
-##### `getValues()`
-Returns the values to be escaped for this statement.
-
-### Examples
+#### Example
 
 ```php
+use FaaPz\PDO\Clause\Conditional;
+use FaaPz\PDO\Clause\Grouping;
+
+// ... WHERE col1 = ? AND (col2 = ? OR col3 = ?)
 $statement->where(
-    new Clause\Grouping("AND", array(
-        new Clause\Conditional("col_1", "=", "val_1"),
-        new Clause\Grouping("OR", array(
-            new Clause\Conditional("col_2", "=", 'val_2'),
-            new Clause\Conditional("col_3", "=", 'val_2')
-        )
-    ));
+    new Grouping('AND', [
+        new Conditional('col1', '=', 'val1'),
+        new Grouping('OR', [
+            new Conditional('col2', '=', 'val2'),
+            new Conditional('col3', '=', 'val3')
+        ])
+    ]);
 ```

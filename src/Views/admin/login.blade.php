@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="{{siteUrl('adm_assets/css/vendor/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{siteUrl('adm_assets/css/vendor/bootstrap.rtl.only.min.css')}}">
         <link rel="stylesheet" href="{{siteUrl('adm_assets/css/vendor/bootstrap-float-label.min.css')}}">
-        <link rel="stylesheet" href="{{siteUrl('adm_assets/css/main.css')}}">
+
     </head>
     
     <body class="background show-spinner no-footer">
@@ -21,7 +21,6 @@
                     <div class="col-12 col-md-10 mx-auto my-auto">
                         <div class="card auth-card">
                             <div class="position-relative image-side">
-                                <p class="text-white text-center h2">MAYORISTA CERÁMICOS</p>
                             </div>
                             <div class="form-side">
                                 <a href="#">
@@ -38,7 +37,7 @@
                                         <span>Contraseña</span>
                                     </label>
                                     <div class="d-flex justify-content-end">
-                                        <button class="btn btn-primary btn-lg btn-shadow" type="submit">LOGIN</button>
+                                        <button class="btn btn-primary btn-lg btn-shadow" type="submit">Ingresar</button>
                                     </div>
                                 </form>
                             </div>
